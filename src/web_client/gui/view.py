@@ -2,10 +2,10 @@ from nicegui import ui
 import pandas as pd
 from returns.maybe import Some, Nothing
 
-from gui.state import AppState
-from gui.update import go_to_player
-from player_data.player_data import PlayerData
-from utils import get_player_image
+from web_client.gui.state import AppState
+from web_client.gui.update import go_to_player
+from lib.player_data import PlayerData
+from server.utils import get_player_image
 
 
 #TODO: Deixar as linhas da tabela clicáveis

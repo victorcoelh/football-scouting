@@ -2,7 +2,7 @@ import pandas as pd
 from numpy.linalg import norm
 
 
-def load_data() -> pd.DataFrame:
+def load_data(csv_path: str) -> pd.DataFrame:
     database = pd.read_csv("data/mock_data.csv", index_col=0)        
     return database
 
