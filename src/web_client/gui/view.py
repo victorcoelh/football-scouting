@@ -12,14 +12,14 @@ from server.utils import get_player_image
 #TODO: Adicionar um botão de voltar
 
 @ui.refreshable
-def main_window(state: AppState, query_response: pd.DataFrame):
+def main_window(state: AppState):
     match state.current_player:
         case Some(player):
             player_screen(player, state.similar_players.unwrap())
         case Nothing:
-            dashboard(state, query_response)
+            dashboard(state)
     
-def dashboard(state: AppState, query_response: pd.DataFrame):
+def dashboard(state: AppState):
     autocomplete_options = query_response["name"].to_list()
     with ui.column().classes("w-full items-center"):
         textbox = ui.input(placeholder="Player Name", autocomplete=autocomplete_options)\

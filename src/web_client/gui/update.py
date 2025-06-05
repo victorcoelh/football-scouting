@@ -1,3 +1,4 @@
+from pydantic import TypeAdapter
 from returns.maybe import Some
 import requests
 
@@ -10,7 +11,9 @@ def fetch_player_data(player_id: int) -> PlayerData:
     return PlayerData.model_validate(response.json())
 
 def fetch_similar_players(player_id: int) -> list[PlayerData]:
-    return []
+    response = requests.get(f"http://127.0.0.1:8000/similar/{player_id}")
+    adapter = TypeAdapter(list[PlayerData])
+    return adapter.validate_python(response.json())
 
 def go_to_player(state: AppState, player_id: int) -> None:
     player = fetch_player_data(player_id)
