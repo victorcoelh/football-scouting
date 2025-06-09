@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from lib.player_data import PlayerData
+from lib.model.player_data import PlayerData
 
 
 def get_player_image(player_id: int) -> Path:

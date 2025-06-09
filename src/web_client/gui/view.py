@@ -1,48 +1,60 @@
 from nicegui import ui
-import pandas as pd
 from returns.maybe import Some, Nothing
 
 from web_client.gui.state import AppState
-from web_client.gui.update import go_to_player
-from lib.player_data import PlayerData
+from web_client.gui.update import go_to_player, fetch_players, go_to_player_named, go_to_dashboard
+from lib.model.player_data import PlayerData
 from server.utils import get_player_image
 
 
-#TODO: Deixar as linhas da tabela clicáveis
+#TODO: Deixar os outros jogadores clicáveis
 #TODO: Adicionar um botão de voltar
 
 @ui.refreshable
 def main_window(state: AppState):
     match state.current_player:
         case Some(player):
-            player_screen(player, state.similar_players.unwrap())
+            player_screen(state)
         case Nothing:
             dashboard(state)
     
 def dashboard(state: AppState):
-    autocomplete_options = query_response["name"].to_list()
+    query_result = fetch_players()
+    autocomplete = [player.name for player in query_result]
+    
     with ui.column().classes("w-full items-center"):
-        textbox = ui.input(placeholder="Player Name", autocomplete=autocomplete_options)\
+        textbox = ui.input(placeholder="Player Name", autocomplete=autocomplete)\
             .props("rounded outlined dense")
-        textbox.on("keydown.enter", lambda _: (go_to_player(state, textbox.value),
+        textbox.on("keydown.enter", lambda _: (go_to_player_named(state, textbox.value),
                                                main_window.refresh()))
 
-        players_table(query_response)
+        players_table(state, query_result)
         
-def players_table(query_response: pd.DataFrame):
-    player_data: list[dict] = []
-    for i, player in query_response.iterrows():
-        player_data.append(player.to_dict())
+def players_table(state: AppState, query_response: list[PlayerData]):
+    player_dicts = [player.model_dump() for player in query_response]
 
-    ui.table(rows= player_data)
+    table = ui.table(
+        rows=player_dicts,
+        row_key="id",
+        selection="single",
+        on_select=lambda x: print("penisssss")
+    )
     
-def player_screen(player: PlayerData, similar_players: list[PlayerData]):   
+    table.on("rowClick", lambda event: (go_to_player(state, event.args[2]),
+                                        main_window.refresh()))
+    
+def player_screen(state: AppState):
+    player = state.current_player.unwrap()
+     
     with ui.column().classes("w-full items-center"):
         player_widget(player)
         ui.separator()
         with ui.row(align_items="start"):
             stats_widget(player)
-            related_widget(similar_players)
+            related_widget(state.similar_players.unwrap())
+            
+    ui.on("keydown.escape", lambda _: (go_to_dashboard(state),
+                                       main_window.refresh()))
 
 def player_widget(player: PlayerData):
     with ui.row(wrap=False, align_items="end").classes():

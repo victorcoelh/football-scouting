@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 from returns.maybe import Maybe
 
-from lib.player_data import PlayerData
+from lib.model.player_data import PlayerData
 
 @dataclass
 class AppState:
