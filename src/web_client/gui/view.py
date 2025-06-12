@@ -3,7 +3,7 @@ from returns.maybe import Some, Nothing
 
 from web_client.gui.state import AppState
 from web_client.gui.update import go_to_player, fetch_players, go_to_player_named, go_to_dashboard
-from lib.model.player_data import PlayerData
+from lib.model.player_model import PlayerData
 from server.utils import get_player_image
 
 
@@ -32,6 +32,9 @@ def dashboard(state: AppState):
         
 def players_table(state: AppState, query_response: list[PlayerData]):
     player_dicts = [player.model_dump() for player in query_response]
+    
+    for ass in player_dicts:
+        del ass["seasons"]
 
     table = ui.table(
         rows=player_dicts,
@@ -62,10 +65,10 @@ def player_widget(player: PlayerData):
         with ui.column(align_items="start"):
             ui.label(player.name)
             with ui.row(wrap=False):
-                ui.label(player.team)
-                ui.label(f"€{player.value}M")
+                ui.label(player.club)
+                ui.label(f"€{player.market_value}M")
                 ui.label(f"{player.age}y")
-                ui.label(f"{player.height}cm")
+                ui.label(f"{player.nationality}")
 
 def stats_widget(player: PlayerData):
     example_row = {"year": "24-25", "goals": player.goals, "assists": player.assists, "rating": player.rating}

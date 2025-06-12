@@ -3,7 +3,7 @@ from numpy.linalg import norm
 
 
 def load_data(csv_path: str) -> pd.DataFrame:
-    database = pd.read_excel("data/jogadores_brasil.xlsx", index_col=0)
+    database = pd.read_csv(csv_path)
     return database
 
 def normalize_data(database: pd.DataFrame) -> pd.DataFrame:
