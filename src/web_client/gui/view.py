@@ -41,7 +41,6 @@ def players_table(state: AppState, query_response: list[PlayerData]):
         rows=player_dicts,
         row_key="id",
         selection="single",
-        on_select=lambda x: print("penisssss"),
         pagination=15,
     ).classes("h-[750px]")\
     .props("virtual-scroll")\
@@ -70,6 +69,7 @@ def player_widget(player: PlayerData):
         with ui.column(align_items="start"):
             ui.label(player.name)
             with ui.row(wrap=False):
+                ui.label(player.position)
                 ui.label(player.club)
                 ui.label(f"{player.age}y")
                 ui.label(f"{player.nationality}")

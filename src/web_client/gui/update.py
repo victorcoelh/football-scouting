@@ -8,7 +8,6 @@ from lib.model.player_model import PlayerData
 
 def fetch_player_data(player_id: int) -> PlayerData:
     response = requests.get(f"http://127.0.0.1:8000/players/{player_id}")
-    print(response.json())
     return PlayerData.model_validate(response.json())
 
 def fetch_similar_players(player_id: int) -> list[PlayerData]:
