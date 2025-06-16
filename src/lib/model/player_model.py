@@ -1,7 +1,7 @@
 from typing import Any
 from pydantic import BaseModel, model_validator
 
-   
+
 class PlayerPer90(BaseModel):
     goals_per_90: float
     assists_per_90: float
@@ -13,7 +13,6 @@ class PlayerPer90(BaseModel):
     blocks_per_90: float
     saves_per_90: float
     crosses_per_90: float
-    distance_travelled_per_90: float
 
 
 class PlayerRates(BaseModel):
@@ -56,6 +55,4 @@ class PlayerData(BaseModel):
     nationality: str
     club: str
     league: str
-    salary: float
-    market_value: float
     seasons: list[PlayerSeason]        

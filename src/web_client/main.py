@@ -6,7 +6,7 @@ from web_client.gui.view import main_window
 
 
 def main() -> None:
-    state = AppState(Nothing, Nothing)
+    state = AppState(Nothing, Nothing, "overall")
     main_window(state)
     ui.run()
 

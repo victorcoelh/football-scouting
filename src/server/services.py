@@ -15,7 +15,7 @@ def most_similar_players(database: pd.DataFrame, player_id: int, criteria: list[
         
         similarity = cossine_similarity(player_data, other_data[criteria])
         other_players_by_similarity.append((other_id, similarity)) # type: ignore
-        
+    
     player_list = sorted(other_players_by_similarity, key=lambda x: x[1], reverse=True)
     return list(map(lambda x: x[0], player_list))
 
