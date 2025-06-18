@@ -3,7 +3,7 @@ from typing import Any
 
 import pandas as pd
 
-from lib.model.player_model import PlayerData, PlayerSeason, PlayerPer90, PlayerRates
+from lib.model.player_model import PlayerData, PlayerSeason, PlayerPer90, PlayerPerGame
 
 
 def get_player_image(player_id: int) -> Path:
@@ -24,11 +24,11 @@ def get_player_from_id(database: pd.DataFrame, player_id: int) -> PlayerData:
 
 def get_criteria() -> list[str]:
     attributes = set(PlayerSeason.model_fields.keys()).union(
-        list(PlayerRates.model_fields.keys()),
+        list(PlayerPerGame.model_fields.keys()),
         list(PlayerPer90.model_fields.keys()))
     
     attributes.remove("per_90")
-    attributes.remove("rates")
+    attributes.remove("per_game")
     return list(attributes)
 
 def flatten_nested_dict(nested: dict[str, Any]) -> dict[str, Any]:

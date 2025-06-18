@@ -1,13 +1,12 @@
-from returns.maybe import Nothing
 from nicegui import ui
 
-from web_client.gui.state import AppState
-from web_client.gui.view import main_window
+from web_client.gui.state.state import AppState
+from web_client.gui.view.view import view
 
 
 def main() -> None:
-    state = AppState(Nothing, Nothing, "overall")
-    main_window(state)
+    state = AppState()
+    view(state)
     ui.run()
 
 
