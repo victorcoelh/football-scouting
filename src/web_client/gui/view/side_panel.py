@@ -1,0 +1,59 @@
+from nicegui import ui
+
+
+def create_sidebar(user_name: str, user_email: str):
+    with ui.left_drawer().style("background-color: #1B2130")\
+           .classes("w-[1200px] p-0"):
+
+        with ui.column().classes("w-full p-5 pb-0"):
+            ui.image("./assets/transfermatch_logo.png").classes('w-218')
+            search_bar()
+            nav_bar()
+
+        user_widget(user_name, user_email)
+
+def search_bar():
+    slot = ui.input(placeholder="Search") \
+        .props('dense borderless input-style="color: #676D7C;"') \
+        .classes("w-full") \
+        .style("border-radius: 8px; background-color: #131722") \
+        .add_slot("prepend")
+        
+    with slot:
+        ui.icon("search", size="md")\
+          .classes("ml-2")\
+          .style("color: #676D7C")
+
+def nav_bar():
+    with ui.column().classes("w-full justify-center mt-20"):
+        with ui.row().classes("w-full items-center hover:bg-slate-700 p-2 rounded-md").on("click", lambda: ui.notify('Player Database clicked')):
+            ui.icon("table_view", size="md").classes("text-white")
+            ui.label("Player Database").classes("text-white text-lg")
+
+        with ui.row().classes("w-full items-center hover:bg-slate-700 p-2 rounded-md").on('click', lambda: ui.notify('Player clicked')):
+            ui.icon("person", size="md").classes("text-white")
+            ui.label("Player").classes("text-white text-lg")
+
+        with ui.row().classes("w-full items-center hover:bg-slate-700 p-2 rounded-md"):
+            ui.icon("assessment", size="md").classes("text-white")
+            ui.label("Squad").classes("text-white text-lg")
+
+        ui.separator().classes("my-4").style("color: white; size: 5px")
+
+        with ui.row().classes("w-full items-center hover:bg-slate-700 p-2 rounded-md"):
+            ui.icon("settings", size="md").classes("text-white")
+            ui.label("Settings").classes("text-white text-lg")
+
+def user_widget(user_name: str, user_email: str):
+    with ui.card().classes("w-full").style("background-color: #2C3545; margin-top: auto"):
+        with ui.row(wrap=False).classes("items-center"):
+            ui.avatar("img:assets/placeholder_avatar.png", size="md")
+
+            with ui.column().props("justify-center"):
+                ui.label(user_name).classes("text-white text-lg font-bold")
+                ui.label(user_email).classes("text-gray-400 text-sm")
+
+            ui.space()
+            ui.button(icon='logout', on_click=lambda: ui.notify('Logged off')) \
+                .props('flat dense color=red') \
+                .classes('ml-auto')

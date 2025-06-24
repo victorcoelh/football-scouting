@@ -1,3 +1,0 @@
-SIMILARITY_SCORE_ATTRIBUTES = [
-    ""    
-]

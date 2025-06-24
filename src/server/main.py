@@ -25,7 +25,6 @@ async def get_player_by_name(player_name: str) -> PlayerData:
     
     return get_player_from_id(database, id_match)
 
-#TODO: Filter to position before comparisons
 @app.get("/similar/{player_id}")
 async def get_similar_players(player_id: int) -> list[PlayerData]:
     criteria = get_criteria()

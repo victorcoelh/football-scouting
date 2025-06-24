@@ -6,6 +6,7 @@ import pandas as pd
 from lib.model.player_model import PlayerData, PlayerSeason, PlayerPer90, PlayerPerGame
 
 
+#TODO: Obter imagens dos jogadores via google
 def get_player_image(player_id: int) -> Path:
     image_path = Path(f"data/images/{player_id}.png")
     image_path = Path("data/images/2.png") if not image_path.is_file() else image_path

@@ -1,4 +1,4 @@
-from web_client.gui.controller.update import fetch_player_data, fetch_players
+from web_client.gui.controller.update import fetch_player_data
 
 
 def main():

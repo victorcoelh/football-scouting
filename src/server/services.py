@@ -5,12 +5,13 @@ from numpy.linalg import norm
 
 def most_similar_players(database: pd.DataFrame, player_id: int, criteria: list[str]) -> list[int]:
     player_data = database.iloc[player_id] # type: ignore
+    player_position = player_data["position"]
     player_data = player_data[criteria]
     
     other_players_by_similarity: list[tuple[int, float]] = []
 
     for other_id, other_data in database.iterrows():
-        if other_id == player_id:
+        if other_id == player_id or player_position != other_data["position"]:
             continue
         
         similarity = cossine_similarity(player_data, other_data[criteria])
