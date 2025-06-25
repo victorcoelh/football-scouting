@@ -1,8 +1,9 @@
 from typing import Hashable
 from urllib.parse import unquote
 
+import numpy as np
 import pandas as pd
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 
 from server.load_database import load_data, normalize_data
 from server.services import most_similar_players
@@ -33,10 +34,26 @@ async def get_similar_players(player_id: int) -> list[PlayerData]:
     return list(map(
         lambda player_id: get_player_from_id(database, player_id),
         similar_players
-     ))
+    ))
 
 @app.get("/query/")
-async def get_query() -> list[PlayerData]:
+async def get_query(filter: str, column_a: str, column_b: str) -> tuple[list[int], list[float], list[float]]:
+    if column_a not in database or column_b not in database:
+        raise HTTPException(status_code=404, detail="Invalid Column")
+    
+    try:
+        filtered_data = database.query(filter)
+    except Exception:
+        raise HTTPException(status_code=404, detail="Invalid Query")
+
+    ids = filtered_data["id"].to_list()
+    data_a = filtered_data[column_a].to_list()
+    data_b = filtered_data[column_b].to_list()
+
+    return ids, data_a, data_b
+    
+@app.get("/all_players/")
+async def all_players() -> list[PlayerData]:
     top_results = database["id"].to_list()
 
     return [get_player_from_id(database, player_id)

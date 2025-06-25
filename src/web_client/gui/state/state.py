@@ -11,6 +11,9 @@ class AppState:
     __subscribers: dict[str, list[SubscriberFn]]
     _current_player: PlayerData | None
     _similar_players: list[PlayerData] | None
+    _graphic_filter: str
+    _graphic_column_a: str
+    _graphic_column_b: str
     _table_type: TableType
     
     def __init__(self) -> None:
@@ -22,6 +25,9 @@ class AppState:
             "current_player": [],
             "similar_players": [],
             "table_type": [],
+            "graphic_filter": [],
+            "graphic_column_a": [],
+            "graphic_column_b": [],
         }
         
     @property
@@ -35,6 +41,39 @@ class AppState:
     @property
     def table_type(self) -> TableType:
         return self._table_type
+    
+    @property
+    def graphic_filter(self) -> str:
+        return self._graphic_filter
+    
+    @property
+    def graphic_column_a(self) -> str:
+        return self._graphic_column_a
+
+    @property
+    def graphic_column_b(self) -> str:
+        return self._graphic_column_b
+    
+    @graphic_filter.setter
+    def graphic_filter(self, value: str) -> None:
+        self._graphic_filter = value
+        
+        for callback in self.__subscribers["graphic_filter"]:
+            callback(self)
+    
+    @graphic_column_a.setter
+    def graphic_column_a(self, value: str) -> None:
+        self._graphic_column_a = value
+        
+        for callback in self.__subscribers["graphic_column_a"]:
+            callback(self)
+    
+    @graphic_column_b.setter
+    def graphic_column_b(self, value: str) -> None:
+        self._graphic_column_b = value
+        
+        for callback in self.__subscribers["graphic_column_b"]:
+            callback(self)
     
     @current_player.setter
     def current_player(self, value: PlayerData | None) -> None:

@@ -26,6 +26,9 @@ def cossine_similarity(player: pd.Series, other: pd.Series) -> float:
 
     return np.dot(a, b)/(norm(a)*norm(b))
 
+def filter_with_query(database: pd.DataFrame, query: str) -> pd.DataFrame:
+    return database.query(query)
+
 def sort_by_column(dataset: pd.DataFrame, column_name: str) -> pd.DataFrame:
     return dataset.sort_values(column_name)
 

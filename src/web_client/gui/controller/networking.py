@@ -18,6 +18,14 @@ def fetch_player_by_name(player_name: str) -> PlayerData:
     return PlayerData.model_validate(response.json())
 
 def fetch_players() -> list[PlayerData]:
-    response = requests.get("http://127.0.0.1:8000/query/")
+    response = requests.get("http://127.0.0.1:8000/all_players/")
     adapter = TypeAdapter(list[PlayerData])
     return adapter.validate_python(response.json())
+
+def fetch_query(filter: str, column_a: str, column_b: str) -> tuple[list[int], list[float], list[float]]:
+    if not filter or not column_a or not column_b:
+        return ([], [], [])
+    
+    response = requests.get(f"http://127.0.0.1:8000/query/?filter={filter}&column_a={column_a}&column_b={column_b}")
+    print (response.json())
+    return 0
