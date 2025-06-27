@@ -1,8 +1,8 @@
 from nicegui import ui
 
 from web_client.gui.state.state import AppState
-from web_client.gui.view.dashboard import dashboard
-from web_client.gui.view.player_view import player_screen
+from web_client.gui.view.dashboard.dashboard import dashboard
+from web_client.gui.view.player_view.player_view import player_screen
 from web_client.gui.view.side_panel import create_sidebar
 
 

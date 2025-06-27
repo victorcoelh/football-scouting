@@ -3,6 +3,7 @@ from nicegui import ui
 from lib.model.player_model import PlayerData
 from server.utils import get_player_image
 from web_client.gui.controller.update import go_to_dashboard, go_to_player
+from web_client.gui.view.player_view.graphics_widget import graphics_widget
 from web_client.gui.state.state import AppState
 
 
@@ -12,15 +13,15 @@ def player_screen(state: AppState):
 
     with ui.column().classes("full-width full-height p-20"):
         player_widget(state.current_player)
-        ui.separator()
+        ui.separator().classes("full-width mr-0")
 
-        with ui.row(align_items="start", wrap=False).classes("full-width justify-between items-start"):
-            stats_widget(state)
+        with ui.row(align_items="start", wrap=False).classes("w-3/4 justify-between items-start"):
+            with ui.column().classes("full-width full-height"):
+                stats_widget(state)
+                graphics_widget(state)
+                state.subscribe(stats_widget.refresh, "table_type")
+
             related_widget(state)
-            state.subscribe(stats_widget.refresh, "table_type")
-
-        graphics_widget()
-
     ui.on("keydown.escape", lambda _: go_to_dashboard(state))
 
 def player_widget(player: PlayerData):
@@ -50,7 +51,7 @@ def stats_widget(state: AppState):
             del season["per_90"]
             del season["per_game"]
             
-    with ui.column(align_items="start").classes("w-4/5"):
+    with ui.column(align_items="start").classes("full-width"):
         toggle_widget(state)
         ui.table(rows=player_dicts)\
             .classes("full-width")\
@@ -63,7 +64,7 @@ def related_widget(state: AppState):
 
 #TODO: Filter showed stats on similar player to most relevant stats
 def similar_player_card(state: AppState, player: PlayerData):  
-    with ui.card().classes("w-[355px]").style("background-color: #272C3B") as card:
+    with ui.card().classes("w-64").style("background-color: #272C3B") as card:
         with ui.column():
             ui.label(player.name)
             with ui.row():
@@ -71,6 +72,3 @@ def similar_player_card(state: AppState, player: PlayerData):
                 ui.label(f"Assists: {player.seasons[0].assists}")
                 ui.label(f"Rating: {player.seasons[0].average_rating}")
         card.on("click", lambda player_id: go_to_player(state, player.id))
-        
-def graphics_widget():
-    ui.label("Graphics")

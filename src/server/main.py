@@ -37,7 +37,11 @@ async def get_similar_players(player_id: int) -> list[PlayerData]:
     ))
 
 @app.get("/query/")
-async def get_query(filter: str, column_a: str, column_b: str) -> tuple[list[int], list[float], list[float]]:
+async def get_query(filter: str, column_a: str, column_b: str) -> tuple[list[int], list[str], list[float], list[float]]:
+    filter = unquote(filter)
+    column_a = unquote(column_a)
+    column_b = unquote(column_b)
+    
     if column_a not in database or column_b not in database:
         raise HTTPException(status_code=404, detail="Invalid Column")
     
@@ -47,10 +51,11 @@ async def get_query(filter: str, column_a: str, column_b: str) -> tuple[list[int
         raise HTTPException(status_code=404, detail="Invalid Query")
 
     ids = filtered_data["id"].to_list()
+    names = filtered_data["name"].to_list()
     data_a = filtered_data[column_a].to_list()
     data_b = filtered_data[column_b].to_list()
 
-    return ids, data_a, data_b
+    return ids, names, data_a, data_b
     
 @app.get("/all_players/")
 async def all_players() -> list[PlayerData]:
