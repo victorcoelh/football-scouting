@@ -9,7 +9,7 @@ from web_client.gui.controller.networking import fetch_query
 
 def graphics_widget(state: AppState):
     with ui.card().classes("full-width"):
-        with ui.row():
+        with ui.row(wrap=False).classes("full-width"):
             with ui.column():
                 input_widget(state, "Filter", "graphic_filter")
                 input_widget(state, "Column A", "graphic_column_a")
@@ -45,7 +45,7 @@ def plotly_graph(state: AppState) -> None:
 			)
         ))
 
-	plot = ui.plotly(fig)
+	plot = ui.plotly(fig).classes("w-full h-[600px]")
 	plot.on('plotly_click', lambda x: go_to_player_named(state, get_name_from_event(x)))
 
 @ui.refreshable

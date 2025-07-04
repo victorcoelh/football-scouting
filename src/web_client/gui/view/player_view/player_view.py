@@ -62,14 +62,14 @@ def stats_widget(state: AppState):
 
 def related_widget(state: AppState):
     with ui.column(align_items="start").classes("items-start"):
-        for player in state.similar_players[:5]: # type: ignore
+        for player in state.similar_players: # type: ignore
             similar_player_card(state, player)
 
 #TODO: Filter showed stats on similar player to most relevant stats
 def similar_player_card(state: AppState, player: PlayerData):  
-    with ui.card().classes("w-64").style("background-color: #272C3B") as card:
+    with ui.card().classes("w-80").style("background-color: #272C3B") as card:
         with ui.column():
-            ui.label(player.name)
+            ui.label(player.name).classes("text-base")
             with ui.row():
                 ui.label(f"Goals: {player.seasons[0].goals}")
                 ui.label(f"Assists: {player.seasons[0].assists}")

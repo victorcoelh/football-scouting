@@ -29,7 +29,7 @@ async def get_player_by_name(player_name: str) -> PlayerData:
 @app.get("/similar/{player_id}")
 async def get_similar_players(player_id: int) -> list[PlayerData]:
     criteria = get_criteria()
-    similar_players = most_similar_players(normalized_data, player_id, criteria)[:5]
+    similar_players = most_similar_players(normalized_data, player_id, criteria)[:7]
 
     return list(map(
         lambda player_id: get_player_from_id(database, player_id),

@@ -28,7 +28,7 @@ def fetch_query(filter: str, column_a: str, column_b: str) -> Result[list[Player
     if not filter or not column_a or not column_b:
         return Success([])
 
-    return _make_request(filter, column_a, column_b).map(_parse_json)
+    return _make_request(filter, column_b, column_a).map(_parse_json)
 
 @safe
 def _make_request(filter: str, column_a: str, column_b: str) -> requests.Response:
