@@ -1,14 +1,14 @@
 from typing import Hashable
 from urllib.parse import unquote
 
-import numpy as np
 import pandas as pd
 from fastapi import FastAPI, HTTPException
 
+from lib.model.player_snapshot import PlayerSnapshot
 from server.load_database import load_data, normalize_data
 from server.services import most_similar_players
 from lib.model.player_model import PlayerData
-from server.utils import get_criteria, get_player_from_id, find_substring_in_list
+from server.utils import get_criteria, get_player_from_id, find_substring_in_list, series_to_snapshot
 
 app = FastAPI()
 database = load_data("./data/jogadores_brasil_no_bad_columns.csv")
@@ -37,7 +37,7 @@ async def get_similar_players(player_id: int) -> list[PlayerData]:
     ))
 
 @app.get("/query/")
-async def get_query(filter: str, column_a: str, column_b: str) -> tuple[list[int], list[str], list[float], list[float]]:
+async def get_query(filter: str, column_a: str, column_b: str) -> list[PlayerSnapshot]:
     filter = unquote(filter)
     column_a = unquote(column_a)
     column_b = unquote(column_b)
@@ -46,16 +46,15 @@ async def get_query(filter: str, column_a: str, column_b: str) -> tuple[list[int
         raise HTTPException(status_code=404, detail="Invalid Column")
     
     try:
-        filtered_data = database.query(filter)
+        filtered_data = database.query(filter).query("season == 2024")
     except Exception:
         raise HTTPException(status_code=404, detail="Invalid Query")
 
-    ids = filtered_data["id"].to_list()
-    names = filtered_data["name"].to_list()
-    data_a = filtered_data[column_a].to_list()
-    data_b = filtered_data[column_b].to_list()
-
-    return ids, names, data_a, data_b
+    return list(
+        map(
+            lambda x: series_to_snapshot(x[0], x[1], column_a, column_b), # type: ignore
+            filtered_data.iterrows()
+    ))
     
 @app.get("/all_players/")
 async def all_players() -> list[PlayerData]:

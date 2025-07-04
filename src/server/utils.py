@@ -1,17 +1,32 @@
-from pathlib import Path
 from typing import Any
 
 import pandas as pd
 
 from lib.model.player_model import PlayerData, PlayerSeason, PlayerPer90, PlayerPerGame
+from lib.model.player_snapshot import PlayerSnapshot
+
+import requests
+from bs4 import BeautifulSoup
 
 
 #TODO: Obter imagens dos jogadores via google
-def get_player_image(player_id: int) -> Path:
-    image_path = Path(f"data/images/{player_id}.png")
-    image_path = Path("data/images/2.png") if not image_path.is_file() else image_path
+def get_player_image(player_name: str) -> str:
+    player_name = player_name.replace(" ", "+")
+    url = "https://www.google.com/search?tbm=isch&q="+player_name
+    headers = {"User-Agent": "Mozilla/5.0"}
 
-    return image_path
+    res = requests.get(url, headers=headers)
+    soup = BeautifulSoup(res.text, "html.parser")
+
+    img_tags = soup.find_all("img")
+
+    for img in img_tags:
+        src = img.get("src") # type: ignore
+        if src and "http" in src:
+            print("Imagem:", src)
+            return src # type: ignore
+        
+    return "./assets/placeholder_avatar.png"
 
 def get_player_from_id(database: pd.DataFrame, player_id: int) -> PlayerData:
     player_seasons = database[database["id"] == player_id]
@@ -31,6 +46,16 @@ def get_criteria() -> list[str]:
     attributes.remove("per_90")
     attributes.remove("per_game")
     return list(attributes)
+
+def series_to_snapshot(player_id: int, player: pd.Series, column_a: str, column_b: str) -> PlayerSnapshot:
+    return PlayerSnapshot(
+        id=player_id, # type: ignore
+        name=player["name"],
+        stats={
+            column_a: player[column_a],
+            column_b: player[column_b]
+        }
+    )
 
 def flatten_nested_dict(nested: dict[str, Any]) -> dict[str, Any]:
     stack = list(nested.items())

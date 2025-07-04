@@ -26,15 +26,18 @@ def player_screen(state: AppState):
 
 def player_widget(player: PlayerData):
     with ui.row(wrap=False, align_items="end").classes():
-        ui.image(get_player_image(player.id)).classes("w-32")
+        ui.image(get_player_image(player.name)).classes("w-32")
         with ui.column(align_items="start"):
-            ui.label(player.name)
+            ui.label(player.name).classes("text-2xl")
             with ui.row(wrap=False):
-                ui.label(player.position)
-                ui.label(player.club)
-                ui.label(f"{player.age}y")
-                ui.label(f"{player.nationality}")
-                
+                ui.label(f"Position: {player.position}").classes("text-base")
+                ui.separator().props("vertical")
+                ui.label(f"Team: {player.club}").classes("text-base")
+                ui.separator().props("vertical")
+                ui.label(f"Age: {player.age}y").classes("text-base")
+                ui.separator().props("vertical")
+                ui.label(f"From: {player.nationality}").classes("text-base")
+
 def toggle_widget(state: AppState):
     ui.toggle(["overall", "per_game", "per_90"])\
       .bind_value(state, "table_type")

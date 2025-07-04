@@ -3,8 +3,7 @@ from returns.result import Result, safe, Success
 import requests
 
 from lib.model.player_model import PlayerData
-
-type GraphicData = tuple[list[int], list[str], list[float], list[float]]
+from lib.model.player_snapshot import PlayerSnapshot
 
 
 def fetch_player_data(player_id: int) -> PlayerData:
@@ -25,10 +24,10 @@ def fetch_players() -> list[PlayerData]:
     adapter = TypeAdapter(list[PlayerData])
     return adapter.validate_python(response.json())
 
-def fetch_query(filter: str, column_a: str, column_b: str) -> Result[GraphicData, Exception]:
+def fetch_query(filter: str, column_a: str, column_b: str) -> Result[list[PlayerSnapshot], Exception]:
     if not filter or not column_a or not column_b:
-        return Success(([], [], [], []))
-    
+        return Success([])
+
     return _make_request(filter, column_a, column_b).map(_parse_json)
 
 @safe
@@ -37,5 +36,6 @@ def _make_request(filter: str, column_a: str, column_b: str) -> requests.Respons
     response.raise_for_status()
     return response
 
-def _parse_json(response: requests.Response) -> GraphicData:
-    return response.json()
+def _parse_json(response: requests.Response) -> list[PlayerSnapshot]:
+    adapter = TypeAdapter(list[PlayerSnapshot])
+    return adapter.validate_python(response.json())

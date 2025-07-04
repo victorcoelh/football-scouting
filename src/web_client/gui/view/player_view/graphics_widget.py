@@ -25,26 +25,30 @@ def input_widget(state: AppState, label: str, attribute: str) -> None:
 
 @ui.refreshable
 def plotly_graph(state: AppState) -> None:
-    _, names, x, y = fetch_query(state.graphic_filter, state.graphic_column_a, state.graphic_column_b)\
-      .alt(lambda x: print(x))\
-      .value_or((None, "ass", None, None))
+	players = fetch_query(state.graphic_filter, state.graphic_column_a, state.graphic_column_b)\
+		.alt(lambda x: print(x))\
+		.value_or([])
 
-    colors = ["red" if name == state.current_player.name else "blue" for name in names] # type: ignore
-    sizes = [15 if name == state.current_player.name else 8 for name in names] # type: ignore
-    
-    fig = go.Figure(go.Scatter(
-        x=x,
-        y=y,
-        mode="markers",
-        text=names,
-        marker=dict(
-          size=12,
-          color=colors
-        )
-    ))
+	fig = go.Figure()
 
-    plot = ui.plotly(fig)
-    plot.on('plotly_click', lambda x: go_to_player_named(state, get_name_from_event(x)))
+	for player in players:
+		x, y = player.stats.values()
+		fig.add_trace(go.Scatter(
+			x=[x],
+   			y=[y],
+			showlegend=False,
+			name=player.name,
+      		mode="markers",
+			marker=dict(
+				size=15 if player.name == state.current_player.name else 8, # type: ignore
+				color="red" if player.name == state.current_player.name else "blue" # type: ignore
+			)
+        ))
 
+	plot = ui.plotly(fig)
+	plot.on('plotly_click', lambda x: go_to_player_named(state, get_name_from_event(x)))
+
+@ui.refreshable
 def get_name_from_event(event: GenericEventArguments) -> str:
-  return event.args["points"][0]["text"]
+	print(event.args["points"])
+	return event.args["points"][0]["data"]["name"]
