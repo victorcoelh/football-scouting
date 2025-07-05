@@ -1,7 +1,7 @@
 from nicegui import ui
 
 from lib.model.player_model import PlayerData
-from server.utils import get_player_image
+from web_client.gui.view.player_view.player_image import get_player_image
 from web_client.gui.controller.update import go_to_dashboard, go_to_player
 from web_client.gui.view.player_view.graphics_widget import graphics_widget
 from web_client.gui.state.state import AppState
@@ -40,6 +40,9 @@ def player_widget(player: PlayerData):
 
 def toggle_widget(state: AppState):
     ui.toggle(["overall", "per_game", "per_90"])\
+      .classes("my-0 py-0 full-width no-shadow") \
+      .props("outline spread") \
+      .style("color: #5c5c5c") \
       .bind_value(state, "table_type")
 
 @ui.refreshable
@@ -54,10 +57,10 @@ def stats_widget(state: AppState):
             del season["per_90"]
             del season["per_game"]
             
-    with ui.column(align_items="start").classes("full-width"):
+    with ui.card(align_items="start").classes("full-width p-0 m-0").style("gap: 0rem"):
         toggle_widget(state)
         ui.table(rows=player_dicts)\
-            .classes("full-width")\
+            .classes("full-width my-0 py-0 no-shadow")\
             .props("virtual-scroll")\
 
 def related_widget(state: AppState):
@@ -67,7 +70,7 @@ def related_widget(state: AppState):
 
 #TODO: Filter showed stats on similar player to most relevant stats
 def similar_player_card(state: AppState, player: PlayerData):  
-    with ui.card().classes("w-80").style("background-color: #272C3B") as card:
+    with ui.card().classes("w-80").style("background-color: #1B2130") as card:
         with ui.column():
             ui.label(player.name).classes("text-base")
             with ui.row():

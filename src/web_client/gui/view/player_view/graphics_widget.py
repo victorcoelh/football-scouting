@@ -12,8 +12,8 @@ def graphics_widget(state: AppState):
         with ui.row(wrap=False).classes("full-width"):
             with ui.column():
                 input_widget(state, "Filter", "graphic_filter")
-                input_widget(state, "Column A", "graphic_column_a")
-                input_widget(state, "Column B", "graphic_column_b")
+                input_widget(state, "Y Axis", "graphic_column_a")
+                input_widget(state, "X Axis", "graphic_column_b")
                 ui.button("Update").on_click(plotly_graph.refresh)
 
             plotly_graph(state)

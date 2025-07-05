@@ -9,7 +9,7 @@ from web_client.gui.view.side_panel import create_sidebar
 def view(state: AppState) -> None:
     ui.dark_mode(True)
     ui.add_head_html("<style>body {background-color: #131722; }</style>")
-    create_sidebar("Victor", "v.coelhods@gmail.com")
+    create_sidebar(state, "Victor", "v.coelhods@gmail.com")
     main_window(state)
 
     state.subscribe(main_window.refresh, "current_player")
