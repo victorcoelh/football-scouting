@@ -7,5 +7,5 @@ setup(
         #find_packages(where="web_client") + \
         find_packages(where="lib"),
     package_dir={'': 'src'},  # Specifies that packages are located in the 'src' directory
-    python_requires='>=3.6', # Specify the Python versions you support
+    python_requires='>=3.12', # Specify the Python versions you support
 )
